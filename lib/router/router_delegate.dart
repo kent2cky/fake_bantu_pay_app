@@ -11,6 +11,9 @@ import '../ui/create_account.dart';
 import '../ui/import_wallet.dart';
 import '../ui/login.dart';
 import '../ui/qr_scanner_view.dart';
+import '../ui/receive_specific_amount.dart';
+import '../ui/recieve_asset_view.dart';
+import '../ui/request_specific_amount_confirm.dart';
 import '../ui/splash.dart';
 import '../ui/swap_success.dart';
 import '../ui/transaction_details.dart';
@@ -154,6 +157,17 @@ class FakeBantuPayRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.AssetDetails:
           _addPageData(AssetDetails(), AssetDetailsPageConfig);
           break;
+        case Pages.RecieveAsset:
+          _addPageData(const RecieveAsset(), RecieveAssetPageConfig);
+          break;
+        case Pages.ReceiveSpecificAmount:
+          _addPageData(
+              const ReceiveSpecificAmount(), ReceiveSpecificAmountPageConfig);
+          break;
+        case Pages.RequestSpecificAmountConfirm:
+          _addPageData(const RequestSpecificAmountConfirm(),
+              RequestSpecificAmountConfirmPageConfig);
+          break;
         default:
           break;
       }
@@ -247,6 +261,15 @@ class FakeBantuPayRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.AssetDetails:
         AssetDetailsPageConfig.currentPageAction = action;
         break;
+      case Pages.RecieveAsset:
+        RecieveAssetPageConfig.currentPageAction = action;
+        break;
+      case Pages.ReceiveSpecificAmount:
+        ReceiveSpecificAmountPageConfig.currentPageAction = action;
+        break;
+      case Pages.RequestSpecificAmountConfirm:
+        RequestSpecificAmountConfirmPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -336,42 +359,26 @@ class FakeBantuPayRouterDelegate extends RouterDelegate<PageConfiguration>
         case 'scanResultPage':
           setPath([
             _createPage(const Login(), LoginPageConfig),
-            _createPage(ScanResultPage(), ScanResultPageConfig),
+            _createPage(const ScanResultPage(), ScanResultPageConfig),
           ]);
           break;
         case 'confirmTransaction':
           setPath([
             _createPage(const Login(), LoginPageConfig),
-            _createPage(ScanResultPage(), ScanResultPageConfig),
-            _createPage(ConfirmTransactionPage(), ConfirmTransactionPageConfig),
+            _createPage(const ScanResultPage(), ScanResultPageConfig),
+            _createPage(
+                const ConfirmTransactionPage(), ConfirmTransactionPageConfig),
           ]);
           break;
         case 'confirmSwap':
-          setPath([
-            _createPage(const Dashboard(), DashboardPageConfig),
-          ]);
-          break;
         case 'transactionSuccess':
-          setPath([
-            _createPage(const Dashboard(), DashboardPageConfig),
-          ]);
-          break;
         case 'swapSuccess':
-          setPath([
-            _createPage(const Dashboard(), DashboardPageConfig),
-          ]);
-          break;
         case 'dashboard':
-          setPath([
-            _createPage(const Dashboard(), DashboardPageConfig),
-          ]);
-          break;
         case 'transactionDetail':
-          setPath([
-            _createPage(const Dashboard(), DashboardPageConfig),
-          ]);
-          break;
         case 'assetDetails':
+        case 'recieveAsset':
+        case 'receiveSpecificAmount':
+        case 'requestSpecificAmountConfirm':
           setPath([
             _createPage(const Dashboard(), DashboardPageConfig),
           ]);

@@ -16,6 +16,9 @@ const String SwapSuccessPath = '/swapSuccess';
 const String TransactionDetailPath = '/transactionDetail';
 const String DashboardPath = '/dashboard';
 const String AssetDetailsPath = '/assetDetails';
+const String RecieveAssetPath = '/recieveAsset';
+const String ReceiveSpecificAmountPath = '/receiveSpecificAmount';
+const String RequestSpecificAmountConfirmPath = '/receiveSpecificAmountConfirm';
 
 enum Pages {
   Splash,
@@ -32,6 +35,9 @@ enum Pages {
   SwapSuccess,
   TransactionDetail,
   AssetDetails,
+  RecieveAsset,
+  ReceiveSpecificAmount,
+  RequestSpecificAmountConfirm,
 }
 
 class PageConfiguration {
@@ -116,4 +122,19 @@ PageConfiguration AssetDetailsPageConfig = PageConfiguration(
     key: 'AssetDetails',
     path: AssetDetailsPath,
     uiPage: Pages.AssetDetails,
+    currentPageAction: null);
+PageConfiguration RecieveAssetPageConfig = PageConfiguration(
+    key: 'RecieveAsset',
+    path: RecieveAssetPath,
+    uiPage: Pages.RecieveAsset,
+    currentPageAction: null);
+PageConfiguration ReceiveSpecificAmountPageConfig = PageConfiguration(
+    key: 'ReceiveSpecificAmount',
+    path: RecieveAssetPath,
+    uiPage: Pages.ReceiveSpecificAmount,
+    currentPageAction: null);
+PageConfiguration RequestSpecificAmountConfirmPageConfig = PageConfiguration(
+    key: 'RequestSpecificAmountConfirm',
+    path: RequestSpecificAmountConfirmPath,
+    uiPage: Pages.RequestSpecificAmountConfirm,
     currentPageAction: null);

@@ -39,6 +39,12 @@ class FakeBantuPayRouteParser
         return DashboardPageConfig;
       case TransactionDetailPath:
         return TransactionDetailPageConfig;
+      case RecieveAssetPath:
+        return RecieveAssetPageConfig;
+      case ReceiveSpecificAmountPath:
+        return ReceiveSpecificAmountPageConfig;
+      case RequestSpecificAmountConfirmPath:
+        return RequestSpecificAmountConfirmPageConfig;
       default:
         return SplashPageConfig;
     }
@@ -73,6 +79,10 @@ class FakeBantuPayRouteParser
         return const RouteInformation(location: DashboardPath);
       case Pages.TransactionDetail:
         return const RouteInformation(location: TransactionDetailPath);
+      case Pages.RecieveAsset:
+        return const RouteInformation(location: RecieveAssetPath);
+      case Pages.ReceiveSpecificAmount:
+        return const RouteInformation(location: ReceiveSpecificAmountPath);
       default:
         return const RouteInformation(location: SplashPath);
     }

@@ -19,171 +19,167 @@ class AssetDetails extends StatelessWidget {
     );
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
         iconTheme: IconThemeData(
           color: Colors.grey.shade800, //change your color here
         ),
         elevation: 0,
-        backgroundColor: Colors.white60,
+        backgroundColor: Colors.grey.shade300,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            color: Colors.grey.shade200,
-            child: Column(
-              children: [
-                Container(
-                  height: 37.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          currentAsset.name!,
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                            letterSpacing: 1.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                            fontFamily: "Source Sans Pro",
-                          ),
+          Column(
+            children: [
+              Container(
+                height: 37.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        currentAsset.name!,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          letterSpacing: 1.0,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                          fontFamily: "Source Sans Pro",
                         ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 3),
+                child: Container(
+                  width: 310,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                    color: Colors.orange[800],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
                       ),
                     ],
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 3),
-                  child: Container(
-                    width: 310,
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10.0)),
-                      color: Colors.orange[800],
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset:
-                              const Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 5.0, vertical: 25.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'Available Balance   ',
-                                style: _utility.getTextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const Icon(
-                                Icons.remove_red_eye_outlined,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 5.0, vertical: 25.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Available Balance   ',
+                              style: _utility.getTextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
                                 color: Colors.white,
-                                size: 20.0,
                               ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20.0,
-                          ),
-                          Text(
-                            '${numberFormatter.format(currentAsset.availableBalance)} ${currentAsset.name}',
-                            style: _utility.getTextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
                             ),
-                          ),
-                          Text(
-                            '≈ ${numberFormatter.format((currentAsset.availableBalance! * currentAsset.nairaExchangeRate!))} NGN',
-                            style: _utility.getTextStyle(
-                              // fontSize: 15,
-                              fontWeight: FontWeight.w300,
+                            const Icon(
+                              Icons.remove_red_eye_outlined,
                               color: Colors.white,
+                              size: 20.0,
                             ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        Text(
+                          '${numberFormatter.format(currentAsset.availableBalance)} ${currentAsset.name}',
+                          style: _utility.getTextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 30.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                  child: Container(
-                    width: 310,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10.0)),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset:
-                              const Offset(0, 3), // changes position of shadow
+                        ),
+                        Text(
+                          '≈ ${numberFormatter.format((currentAsset.availableBalance! * currentAsset.nairaExchangeRate!))} NGN',
+                          style: _utility.getTextStyle(
+                            // fontSize: 15,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white,
+                          ),
                         ),
                       ],
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 25.0, vertical: 20.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.orange[800],
-                            foregroundImage: AssetImage(currentAsset.logo!),
-                            maxRadius: 25,
-                          ),
-                          Text(
-                            currentAsset.fullName ?? '',
-                            style: _utility.getTextStyle(
-                                fontSize: 13, fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            currentAsset.description ?? '',
-                            style: _utility.getTextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            currentAsset.issuer ?? '',
-                            style: _utility.getTextStyle(
-                                fontSize: 13, fontWeight: FontWeight.w400),
-                          ),
-                        ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 30.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                child: Container(
+                  width: 310,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
                       ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 25.0, vertical: 20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.orange[800],
+                          foregroundImage: AssetImage(currentAsset.logo!),
+                          maxRadius: 25,
+                        ),
+                        Text(
+                          currentAsset.fullName ?? '',
+                          style: _utility.getTextStyle(
+                              fontSize: 13, fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          currentAsset.description ?? '',
+                          style: _utility.getTextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          currentAsset.issuer ?? '',
+                          style: _utility.getTextStyle(
+                              fontSize: 13, fontWeight: FontWeight.w400),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -195,7 +191,7 @@ class AssetDetails extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () => {
                         appState.currentAction = PageAction(
-                            state: PageState.replace,
+                            state: PageState.addPage,
                             page: ScanResultPageConfig),
                       },
                       child: Text(
@@ -220,7 +216,11 @@ class AssetDetails extends StatelessWidget {
                       ),
                     ),
                     OutlinedButton(
-                      onPressed: () => {},
+                      onPressed: () => {
+                        appState.currentAction = PageAction(
+                            state: PageState.addPage,
+                            page: RecieveAssetPageConfig),
+                      },
                       child: Text(
                         'Recieve',
                         style: _utility.getTextStyle(

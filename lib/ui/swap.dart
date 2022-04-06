@@ -77,322 +77,306 @@ class _SwapState extends State<Swap> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                color: Colors.grey.shade200,
-                child: Column(
-                  children: [
-                    Container(
-                      height: 93.0,
+              Column(
+                children: [
+                  Container(
+                    height: 93.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Expanded(
+                          child: Text(
+                            'Swap',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              letterSpacing: 1.0,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontFamily: "Source Sans Pro",
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          Expanded(
-                            child: Text(
-                              'Swap',
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                letterSpacing: 1.0,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                                fontFamily: "Source Sans Pro",
+                  ),
+                  Container(
+                    height: 15.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 3),
+                    child: Container(
+                      width: 310,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10.0)),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(
+                                0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 30.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'From ',
+                                  style: _utility.getTextStyle(fontSize: 12.0),
+                                ),
+                                if (sourceAsset != null &&
+                                    sourceAsset!.name!.isNotEmpty) ...[
+                                  _myDropdown(
+                                      items: sourceItems!,
+                                      value: sourceAsset!.name!,
+                                      hint: 'Select source asset',
+                                      validator: (value) {
+                                        if (sourceAsset == null ||
+                                            sourceAsset!.name!.isEmpty) {
+                                          return 'Select an asset to swap from';
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                      changed: (value) => {
+                                            if (value!.isNotEmpty)
+                                              {
+                                                sourceAsset = assets!
+                                                    .firstWhere((element) =>
+                                                        element.name == value),
+                                                setState(() {
+                                                  destinationItems!.removeWhere(
+                                                      (element) =>
+                                                          element == value);
+                                                })
+                                              },
+                                          }),
+                                ] else ...[
+                                  _myDropdown(
+                                      items: sourceItems!,
+                                      hint: 'Select source asset',
+                                      validator: (value) {
+                                        if (sourceAsset == null ||
+                                            sourceAsset!.name!.isEmpty) {
+                                          return 'Select an asset to swap from';
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                      changed: (value) => {
+                                            if (value!.isNotEmpty)
+                                              {
+                                                sourceAsset = assets!
+                                                    .firstWhere((element) =>
+                                                        element.name == value),
+                                                setState(() {
+                                                  destinationItems!.removeWhere(
+                                                      (element) =>
+                                                          element == value);
+                                                })
+                                              },
+                                          }),
+                                ]
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 50.0,
+                            child: Center(
+                              child: Image.asset(
+                                'images/icon-below.png',
+                                width: 50,
+                                height: 50,
                               ),
                             ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 30.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'To',
+                                  style: _utility.getTextStyle(fontSize: 12.0),
+                                ),
+                                if (destinationAsset != null &&
+                                    destinationAsset!.name!.isNotEmpty) ...[
+                                  _myDropdown(
+                                      items: destinationItems!,
+                                      value: destinationAsset!.name!,
+                                      validator: (value) {
+                                        if (destinationAsset == null ||
+                                            destinationAsset!.name!.isEmpty) {
+                                          return 'Select an asset to swap to';
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                      hint: 'Select destination asset',
+                                      changed: (value) => {
+                                            if (value!.isNotEmpty)
+                                              {
+                                                destinationAsset = assets!
+                                                    .firstWhere((element) =>
+                                                        element.name == value),
+                                                setState(() {
+                                                  sourceItems!.removeWhere(
+                                                      (element) =>
+                                                          element == value);
+                                                }),
+                                              }
+                                          }),
+                                ] else ...[
+                                  _myDropdown(
+                                      items: destinationItems!,
+                                      hint: 'Select destination asset',
+                                      validator: (value) {
+                                        if (destinationAsset == null ||
+                                            destinationAsset!.name!.isEmpty) {
+                                          return 'Select an asset to swap to';
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                      changed: (value) => {
+                                            if (value!.isNotEmpty)
+                                              {
+                                                destinationAsset = assets!
+                                                    .firstWhere((element) =>
+                                                        element.name == value),
+                                                setState(() {
+                                                  sourceItems!.removeWhere(
+                                                      (element) =>
+                                                          element == value);
+                                                }),
+                                              }
+                                          }),
+                                ]
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              validator: (value) {
+                                if (sourceAsset == null ||
+                                    sourceAsset!.transferQnty == null ||
+                                    sourceAsset!.transferQnty! <= 0) {
+                                  return 'Enter amount to swap';
+                                }
+                                return null;
+                              },
+                              style: _utility.getTextStyle(
+                                  fontSize: 11.0, fontWeight: FontWeight.w400),
+                              controller: textController,
+                              onChanged: _onTextChanged,
+                              decoration: InputDecoration(
+                                enabledBorder: _utility.getEnabledBorderColor(),
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.always,
+                                alignLabelWithHint: true,
+                                labelText: 'Amount to Swap',
+                                labelStyle: _utility.getTextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w300),
+                                hintText: '0',
+                                hintStyle:
+                                    _utility.getTextStyle(fontSize: 11.0),
+                              ),
+                            ),
+                          ),
+                          if (sourceAsset != null &&
+                              sourceAsset!.name!.isNotEmpty) ...[
+                            Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(20.0, 3.0, 20.0, 0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '≈ ${numberFormatter.format(sourceAsset!.nairaValue)} NGN',
+                                    style: _utility.getTextStyle(
+                                      fontSize: 9.0,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  Text(
+                                    assets!
+                                        .firstWhere((element) =>
+                                            element.name == sourceAsset!.name)
+                                        .availableBalance
+                                        .toString(),
+                                    style: _utility.getTextStyle(
+                                      fontSize: 9.0,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                          const SizedBox(
+                            height: 40.0,
                           ),
                         ],
                       ),
                     ),
-                    Container(
-                      height: 15.0,
-                    ),
+                  ),
+                  const SizedBox(
+                    height: 30.0,
+                  ),
+                  if (sourceAsset != null && sourceAsset!.name!.isNotEmpty) ...[
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 3),
-                      child: Container(
-                        width: 310,
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10.0)),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: const Offset(
-                                  0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 30.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'From ',
-                                    style:
-                                        _utility.getTextStyle(fontSize: 12.0),
-                                  ),
-                                  if (sourceAsset != null &&
-                                      sourceAsset!.name!.isNotEmpty) ...[
-                                    _myDropdown(
-                                        items: sourceItems!,
-                                        value: sourceAsset!.name!,
-                                        hint: 'Select source asset',
-                                        validator: (value) {
-                                          if (sourceAsset == null ||
-                                              sourceAsset!.name!.isEmpty) {
-                                            return 'Select an asset to swap from';
-                                          } else {
-                                            return null;
-                                          }
-                                        },
-                                        changed: (value) => {
-                                              if (value!.isNotEmpty)
-                                                {
-                                                  sourceAsset = assets!
-                                                      .firstWhere((element) =>
-                                                          element.name ==
-                                                          value),
-                                                  setState(() {
-                                                    destinationItems!
-                                                        .removeWhere(
-                                                            (element) =>
-                                                                element ==
-                                                                value);
-                                                  })
-                                                },
-                                            }),
-                                  ] else ...[
-                                    _myDropdown(
-                                        items: sourceItems!,
-                                        hint: 'Select source asset',
-                                        validator: (value) {
-                                          if (sourceAsset == null ||
-                                              sourceAsset!.name!.isEmpty) {
-                                            return 'Select an asset to swap from';
-                                          } else {
-                                            return null;
-                                          }
-                                        },
-                                        changed: (value) => {
-                                              if (value!.isNotEmpty)
-                                                {
-                                                  sourceAsset = assets!
-                                                      .firstWhere((element) =>
-                                                          element.name ==
-                                                          value),
-                                                  setState(() {
-                                                    destinationItems!
-                                                        .removeWhere(
-                                                            (element) =>
-                                                                element ==
-                                                                value);
-                                                  })
-                                                },
-                                            }),
-                                  ]
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 50.0,
-                              child: Center(
-                                child: Image.asset(
-                                  'images/icon-below.png',
-                                  width: 50,
-                                  height: 50,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 30.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'To',
-                                    style:
-                                        _utility.getTextStyle(fontSize: 12.0),
-                                  ),
-                                  if (destinationAsset != null &&
-                                      destinationAsset!.name!.isNotEmpty) ...[
-                                    _myDropdown(
-                                        items: destinationItems!,
-                                        value: destinationAsset!.name!,
-                                        validator: (value) {
-                                          if (destinationAsset == null ||
-                                              destinationAsset!.name!.isEmpty) {
-                                            return 'Select an asset to swap to';
-                                          } else {
-                                            return null;
-                                          }
-                                        },
-                                        hint: 'Select destination asset',
-                                        changed: (value) => {
-                                              if (value!.isNotEmpty)
-                                                {
-                                                  destinationAsset = assets!
-                                                      .firstWhere((element) =>
-                                                          element.name ==
-                                                          value),
-                                                  setState(() {
-                                                    sourceItems!.removeWhere(
-                                                        (element) =>
-                                                            element == value);
-                                                  }),
-                                                }
-                                            }),
-                                  ] else ...[
-                                    _myDropdown(
-                                        items: destinationItems!,
-                                        hint: 'Select destination asset',
-                                        validator: (value) {
-                                          if (destinationAsset == null ||
-                                              destinationAsset!.name!.isEmpty) {
-                                            return 'Select an asset to swap to';
-                                          } else {
-                                            return null;
-                                          }
-                                        },
-                                        changed: (value) => {
-                                              if (value!.isNotEmpty)
-                                                {
-                                                  destinationAsset = assets!
-                                                      .firstWhere((element) =>
-                                                          element.name ==
-                                                          value),
-                                                  setState(() {
-                                                    sourceItems!.removeWhere(
-                                                        (element) =>
-                                                            element == value);
-                                                  }),
-                                                }
-                                            }),
-                                  ]
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                validator: (value) {
-                                  if (sourceAsset == null ||
-                                      sourceAsset!.transferQnty == null ||
-                                      sourceAsset!.transferQnty! <= 0) {
-                                    return 'Enter amount to swap';
-                                  }
-                                  return null;
-                                },
-                                style: _utility.getTextStyle(
-                                    fontSize: 11.0,
-                                    fontWeight: FontWeight.w400),
-                                controller: textController,
-                                onChanged: _onTextChanged,
-                                decoration: InputDecoration(
-                                  enabledBorder:
-                                      _utility.getEnabledBorderColor(),
-                                  floatingLabelBehavior:
-                                      FloatingLabelBehavior.always,
-                                  alignLabelWithHint: true,
-                                  labelText: 'Amount to Swap',
-                                  labelStyle: _utility.getTextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.w300),
-                                  hintText: '0',
-                                  hintStyle:
-                                      _utility.getTextStyle(fontSize: 11.0),
-                                ),
-                              ),
-                            ),
-                            if (sourceAsset != null &&
-                                sourceAsset!.name!.isNotEmpty) ...[
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    20.0, 3.0, 20.0, 0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '≈ ${numberFormatter.format(sourceAsset!.nairaValue)} NGN',
-                                      style: _utility.getTextStyle(
-                                        fontSize: 9.0,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    Text(
-                                      assets!
-                                          .firstWhere((element) =>
-                                              element.name == sourceAsset!.name)
-                                          .availableBalance
-                                          .toString(),
-                                      style: _utility.getTextStyle(
-                                        fontSize: 9.0,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                            const SizedBox(
-                              height: 40.0,
-                            ),
-                          ],
-                        ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: SfSlider(
+                        min: 0,
+                        max: 100,
+                        value: sliderValue,
+                        onChanged: _onSliderChanged,
+                        onChangeEnd: _calculateExchangeRate,
+                        interval: 25,
+                        stepSize: 1,
+                        inactiveColor: Colors.grey[900],
+                        showTicks: true,
+                        tooltipTextFormatterCallback: _setToolTip,
+                        showLabels: true,
+                        enableTooltip: true,
+                        // minorTicksPerInterval: 1,
                       ),
                     ),
                     const SizedBox(
-                      height: 30.0,
-                    ),
-                    if (sourceAsset != null &&
-                        sourceAsset!.name!.isNotEmpty) ...[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: SfSlider(
-                          min: 0,
-                          max: 100,
-                          value: sliderValue,
-                          onChanged: _onSliderChanged,
-                          onChangeEnd: _calculateExchangeRate,
-                          interval: 25,
-                          stepSize: 1,
-                          inactiveColor: Colors.grey[900],
-                          showTicks: true,
-                          tooltipTextFormatterCallback: _setToolTip,
-                          showLabels: true,
-                          enableTooltip: true,
-                          // minorTicksPerInterval: 1,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                    ],
-                    ElevatedButton(
-                      onPressed: () => _handleSubmit(appState),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(300.0, 33.0),
-                        primary: Colors.orange[800],
-                        shape: const StadiumBorder(),
-                      ),
-                      child: Text(
-                        'Swap',
-                        style: _utility.getTextStyle(color: Colors.white),
-                      ),
+                      height: 20.0,
                     ),
                   ],
-                ),
+                  ElevatedButton(
+                    onPressed: () => _handleSubmit(appState),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(300.0, 33.0),
+                      primary: Colors.orange[800],
+                      shape: const StadiumBorder(),
+                    ),
+                    child: Text(
+                      'Swap',
+                      style: _utility.getTextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

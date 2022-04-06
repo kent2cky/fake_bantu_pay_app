@@ -2,6 +2,7 @@ import 'package:fake_bantu_pay/ui/history.dart';
 import 'package:fake_bantu_pay/ui/home.dart';
 import 'package:flutter/material.dart';
 
+import 'settings.dart';
 import 'swap.dart';
 
 class Dashboard extends StatefulWidget {
@@ -19,15 +20,13 @@ class _DashboardState extends State<Dashboard> {
     Home(),
     const Swap(),
     History(),
-    const Icon(
-      Icons.chat,
-      size: 150,
-    ),
+    Settings(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade300,
       body: PageView(
         controller: _controller,
         onPageChanged: (index) {
@@ -57,11 +56,11 @@ class _DashboardState extends State<Dashboard> {
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.swap_vertical_circle_outlined),
+              icon: Icon(Icons.wifi_protected_setup),
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.restart_alt),
+              icon: Icon(Icons.update_sharp),
               label: '',
             ),
             BottomNavigationBarItem(
