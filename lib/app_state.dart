@@ -170,12 +170,12 @@ class AppState extends ChangeNotifier {
 
   Transaction? transactionDetail;
 
-  ExpectedScanResult? _scanResult;
-  ExpectedScanResult? get scanResult => _scanResult;
-  set scanResult(ExpectedScanResult? scanResult) {
-    _scanResult = scanResult;
-    notifyListeners();
-  }
+  // ExpectedScanResult? _scanResult;
+  // ExpectedScanResult? get scanResult => _scanResult;
+  // set scanResult(ExpectedScanResult? scanResult) {
+  //   _scanResult = scanResult;
+  //   notifyListeners();
+  // }
 
   PageAction _currentAction = PageAction();
   PageAction get currentAction => _currentAction;

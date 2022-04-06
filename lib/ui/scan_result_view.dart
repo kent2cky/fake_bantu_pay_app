@@ -36,14 +36,19 @@ class _ScanResultPageState extends State<ScanResultPage> {
   void initState() {
     super.initState();
     _appState = Provider.of<AppState>(context, listen: false);
-    _transaction = Transaction(
-      transactionId: DateTime.now().toString(),
-      timestamp: DateTime.now(),
-      asset: _appState!.listedAssets
-          .firstWhere((asset) => asset.id == _appState!.currentAssetId),
-      reciever: User(username: '', walletAddress: ''),
-      transactionType: TransactionType.send,
-    );
+    print('this is appstate ${_appState?.listedAssets.length}');
+    if (_appState?.transactionDetail == null) {
+      _transaction = Transaction(
+        transactionId: DateTime.now().toString(),
+        timestamp: DateTime.now(),
+        asset: _appState!.listedAssets
+            .firstWhere((asset) => asset.id == _appState!.currentAssetId),
+        reciever: User(username: '', walletAddress: ''),
+        transactionType: TransactionType.send,
+      );
+    } else {
+      _transaction = _appState?.transactionDetail;
+    }
   }
 
   @override

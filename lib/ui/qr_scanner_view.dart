@@ -8,6 +8,9 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:scan/scan.dart';
 import '../app_state.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import '../models/transaction.dart';
+import '../models/transaction_types.dart';
+import '../models/user.dart';
 import '../router/ui_pages.dart';
 import '../utility.dart';
 
@@ -161,10 +164,9 @@ class _MyQRViewState extends State<MyQRView> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
-      appState?.scanResult =
-          ExpectedScanResult(scanData.format.name, scanData.code!);
-      appState?.currentAction =
-          PageAction(state: PageState.replace, page: ScanResultPageConfig);
+      // appState?.scanResult =
+      //     ExpectedScanResult(scanData.format.name, scanData.code!);
+      _handleScanResult(scanData.code);
     });
   }
 
@@ -193,11 +195,25 @@ class _MyQRViewState extends State<MyQRView> {
         isLoading = true;
       });
       Scan.parse(image.path).then((scanResult) {
-        appState?.scanResult = ExpectedScanResult('QR Code', scanResult!);
-        appState?.currentAction =
-            PageAction(state: PageState.replace, page: ScanResultPageConfig);
+        // appState?.scanResult = ExpectedScanResult('QR Code', scanResult!);
+        _handleScanResult(scanResult);
       });
     }
+  }
+
+  void _handleScanResult(String? scanResult) {
+    appState?.currentAssetId = 1;
+    appState?.transactionDetail = Transaction(
+        transactionId: DateTime.now().toString(),
+        timestamp: DateTime.now(),
+        asset: appState!.listedAssets
+            .firstWhere((asset) => asset.id == appState!.currentAssetId),
+        reciever: User(username: '', walletAddress: ''),
+        transactionType: TransactionType.send,
+        memo: scanResult);
+
+    appState?.currentAction =
+        PageAction(state: PageState.replace, page: ScanResultPageConfig);
   }
 
   @override
