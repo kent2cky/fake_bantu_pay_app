@@ -55,6 +55,27 @@ class FakeBantuPayRouterDelegate extends RouterDelegate<PageConfiguration>
     );
   }
 
+  Future<bool?> _confirmAppExit() {
+    return showDialog<bool>(
+        context: navigatorKey.currentContext!,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Exit App'),
+            content: const Text('Are you sure you want to exit the app?'),
+            actions: [
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () => Navigator.pop(context, true),
+              ),
+              TextButton(
+                child: const Text('Confirm'),
+                onPressed: () => Navigator.pop(context, false),
+              ),
+            ],
+          );
+        });
+  }
+
   bool _onPopPage(Route<dynamic> route, result) {
     final didPop = route.didPop(result);
     if (!didPop) {

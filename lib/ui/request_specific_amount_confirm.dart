@@ -121,54 +121,57 @@ class _RequestSpecificAmountConfirmState
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  Text(
-                    'For: ',
-                    style: _utility.getTextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w400,
+                  if (transaction!.memo != null &&
+                      transaction.memo!.isNotEmpty) ...[
+                    const SizedBox(
+                      height: 20.0,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 20,
-                    ),
-                    child: Container(
-                      width: 310,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10.0)),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: const Offset(
-                                0, 3), // changes position of shadow
-                          ),
-                        ],
+                    Text(
+                      'For: ',
+                      style: _utility.getTextStyle(
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w400,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'for nothing',
-                              style: _utility.getTextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.w400,
-                              ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 20,
+                      ),
+                      child: Container(
+                        width: 310,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10.0)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(
+                                  0, 3), // changes position of shadow
                             ),
                           ],
                         ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                transaction.memo ?? '',
+                                style: _utility.getTextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                   const SizedBox(
                     height: 30.0,
                   ),
@@ -199,7 +202,7 @@ class _RequestSpecificAmountConfirmState
                       color: Colors.white,
                       child: QrImage(
                         data:
-                            "My name is Ken and I am requesting that you pay me ${transaction?.asset.transferQnty} ${transaction?.asset.name}.",
+                            "My name is Ken and I am requesting that you pay me ${transaction.asset.transferQnty} ${transaction.asset.name}.",
                         version: QrVersions.auto,
                         size: 300.0,
                       ),

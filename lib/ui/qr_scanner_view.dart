@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:fake_bantu_pay/qr_scanner/expected_results.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -164,8 +163,6 @@ class _MyQRViewState extends State<MyQRView> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
-      // appState?.scanResult =
-      //     ExpectedScanResult(scanData.format.name, scanData.code!);
       _handleScanResult(scanData.code);
     });
   }
@@ -195,22 +192,23 @@ class _MyQRViewState extends State<MyQRView> {
         isLoading = true;
       });
       Scan.parse(image.path).then((scanResult) {
-        // appState?.scanResult = ExpectedScanResult('QR Code', scanResult!);
         _handleScanResult(scanResult);
       });
     }
   }
 
   void _handleScanResult(String? scanResult) {
+    print('this is scanresult: $scanResult');
     appState?.currentAssetId = 1;
     appState?.transactionDetail = Transaction(
-        transactionId: DateTime.now().toString(),
-        timestamp: DateTime.now(),
-        asset: appState!.listedAssets
-            .firstWhere((asset) => asset.id == appState!.currentAssetId),
-        reciever: User(username: '', walletAddress: ''),
-        transactionType: TransactionType.send,
-        memo: scanResult);
+      transactionId: DateTime.now().toString(),
+      timestamp: DateTime.now(),
+      asset: appState!.listedAssets
+          .firstWhere((asset) => asset.id == appState!.currentAssetId),
+      reciever: User(username: '', walletAddress: ''),
+      transactionType: TransactionType.send,
+      memo: scanResult,
+    );
 
     appState?.currentAction =
         PageAction(state: PageState.replace, page: ScanResultPageConfig);

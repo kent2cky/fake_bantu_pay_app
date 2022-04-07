@@ -168,14 +168,13 @@ class AppState extends ChangeNotifier {
   Asset? swapSource;
   Asset? swapDest;
 
-  Transaction? transactionDetail;
-
-  // ExpectedScanResult? _scanResult;
-  // ExpectedScanResult? get scanResult => _scanResult;
-  // set scanResult(ExpectedScanResult? scanResult) {
-  //   _scanResult = scanResult;
-  //   notifyListeners();
-  // }
+  Transaction? _transactionDetail;
+  Transaction? get transactionDetail => _transactionDetail;
+  set transactionDetail(Transaction? transaction) {
+    _transactionDetail = transaction;
+    print('notifying listeners...');
+    notifyListeners();
+  }
 
   PageAction _currentAction = PageAction();
   PageAction get currentAction => _currentAction;
