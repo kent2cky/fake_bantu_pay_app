@@ -36,26 +36,31 @@ class FakeBantuPayBackButtonDispatcher extends RootBackButtonDispatcher {
   FakeBantuPayBackButtonDispatcher(this._routerDelegate) : super();
 
   @override
-  Future<bool> didPopRoute() {
+  Future<bool> didPopRoute() async {
     print('backbuttondispatcher here!!!\n\n');
-    return _routerDelegate.popRoute();
+    if (_routerDelegate.pages.length < 1) {
+      return await _confirmAppExit() ?? false;
+    } else {
+      return _routerDelegate.popRoute();
+    }
   }
 
   Future<bool?> _confirmAppExit() {
     return showDialog<bool>(
-        context: navigatorKey.currentContext!,
+        context: _routerDelegate.navigatorKey.currentContext!,
         builder: (context) {
           return AlertDialog(
             title: const Text('Exit App'),
-            content: const Text('Are you sure you want to exit the app?'),
+            content:
+                const Text('Are you sure you want to close this application?'),
             actions: [
               TextButton(
-                child: const Text('Cancel'),
-                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Yes'),
+                onPressed: () => _routerDelegate.popRoute(),
               ),
               TextButton(
-                child: const Text('Confirm'),
-                onPressed: () => Navigator.pop(context, false),
+                child: const Text('No'),
+                onPressed: () => Navigator.of(context).pop(),
               ),
             ],
           );

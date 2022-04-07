@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
+import 'router/back_dispatcher.dart';
 import 'router/route_parser.dart';
 import 'router/router_delegate.dart';
 import 'router/ui_pages.dart';
@@ -17,6 +18,7 @@ class FakeBantuPay extends StatefulWidget {
 }
 
 class _FakeBantuPayState extends State<FakeBantuPay> {
+  FakeBantuPayBackButtonDispatcher? backButtonDispatcher;
   final appState = AppState();
   FakeBantuPayRouterDelegate? delegate;
   final parser = FakeBantuPayRouteParser();
@@ -24,6 +26,7 @@ class _FakeBantuPayState extends State<FakeBantuPay> {
   _FakeBantuPayState() {
     delegate = FakeBantuPayRouterDelegate(appState);
     delegate?.setNewRoutePath(SplashPageConfig);
+    backButtonDispatcher = FakeBantuPayBackButtonDispatcher(delegate!);
   }
 
   @override
@@ -50,6 +53,7 @@ class _FakeBantuPayState extends State<FakeBantuPay> {
         // backButtonDispatcher: backButtonDispatcher,
         routerDelegate: delegate!,
         routeInformationParser: parser,
+        backButtonDispatcher: backButtonDispatcher,
       ),
     );
   }

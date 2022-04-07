@@ -172,7 +172,6 @@ class AppState extends ChangeNotifier {
   Transaction? get transactionDetail => _transactionDetail;
   set transactionDetail(Transaction? transaction) {
     _transactionDetail = transaction;
-    print('notifying listeners...');
     notifyListeners();
   }
 
