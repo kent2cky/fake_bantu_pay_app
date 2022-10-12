@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../app_state.dart';
-import '../local_auth.dart';
 import '../router/ui_pages.dart';
 import '../utility.dart';
 
@@ -17,7 +16,6 @@ class SwapSuccessPage extends StatefulWidget {
 class _SwapSuccessPageState extends State<SwapSuccessPage> {
   final Utility _utility = Utility();
   bool isAuthenticated = false;
-  final Authenticator _authenticator = Authenticator();
   final iconOk = 'images/icon-ok.svg';
 
   @override
@@ -83,14 +81,23 @@ class _SwapSuccessPageState extends State<SwapSuccessPage> {
                       ),
                       ElevatedButton(
                         onPressed: () async {
+                          appState.selectedIndex = 0;
                           appState.currentAction = PageAction(
-                              state: PageState.replace,
+                              state: PageState.replaceAll,
                               page: DashboardPageConfig);
                         },
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(300.0, 33.0),
-                          primary: Colors.orange[800],
-                          shape: const StadiumBorder(),
+                        style: ButtonStyle(
+                          fixedSize: MaterialStateProperty.all(
+                            const Size(300.0, 33.0),
+                          ),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                          ),
                         ),
                         child: Text(
                           'Dashboard',

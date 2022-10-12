@@ -3,11 +3,16 @@ import 'package:fake_bantu_pay/ui/scan_result_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../app_state.dart';
+import '../ui/AccountInfo.dart';
 import '../ui/Dashboard.dart';
+import '../ui/EditProfile.dart';
+import '../ui/Onboarding.dart';
+import '../ui/UserProfile.dart';
 import '../ui/asset_details.dart';
 import '../ui/confirm_swap.dart';
 import '../ui/confirm_transaction.dart';
 import '../ui/create_account.dart';
+import '../ui/enableBiometrics.dart';
 import '../ui/import_wallet.dart';
 import '../ui/login.dart';
 import '../ui/qr_scanner_view.dart';
@@ -86,9 +91,9 @@ class FakeBantuPayRouterDelegate extends RouterDelegate<PageConfiguration>
 
   @override
   Future<bool> popRoute() {
-    print('popping route oo');
     if (canPop()) {
       _removePage(_pages.last);
+      notifyListeners();
       return Future.value(true);
     }
     return Future.value(false);
@@ -168,6 +173,21 @@ class FakeBantuPayRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.RequestSpecificAmountConfirm:
           _addPageData(const RequestSpecificAmountConfirm(),
               RequestSpecificAmountConfirmPageConfig);
+          break;
+        case Pages.AccountInfo:
+          _addPageData(const AccountInfo(), AccountInfoPageConfig);
+          break;
+        case Pages.Onboarding:
+          _addPageData(const Onboarding(), OnboardingPageConfig);
+          break;
+        case Pages.UserProfile:
+          _addPageData(const UserProfile(), UserProfilePageConfig);
+          break;
+        case Pages.EditProfile:
+          _addPageData(const EditProfile(), EditProfilePageConfig);
+          break;
+        case Pages.EnableBiometrics:
+          _addPageData(const EnableBiometrics(), EnableBiometricsPageConfig);
           break;
         default:
           break;
@@ -271,6 +291,21 @@ class FakeBantuPayRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.RequestSpecificAmountConfirm:
         RequestSpecificAmountConfirmPageConfig.currentPageAction = action;
         break;
+      case Pages.AccountInfo:
+        AccountInfoPageConfig.currentPageAction = action;
+        break;
+      case Pages.Onboarding:
+        OnboardingPageConfig.currentPageAction = action;
+        break;
+      case Pages.UserProfile:
+        UserProfilePageConfig.currentPageAction = action;
+        break;
+      case Pages.EditProfile:
+        EditProfilePageConfig.currentPageAction = action;
+        break;
+      case Pages.EnableBiometrics:
+        EnableBiometricsPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -369,6 +404,38 @@ class FakeBantuPayRouterDelegate extends RouterDelegate<PageConfiguration>
             _createPage(const ScanResultPage(), ScanResultPageConfig),
             _createPage(
                 const ConfirmTransactionPage(), ConfirmTransactionPageConfig),
+          ]);
+          break;
+        case 'accountInfo':
+          setPath([
+            _createPage(const Dashboard(), DashboardPageConfig),
+            _createPage(const AccountInfo(), AccountInfoPageConfig),
+          ]);
+          break;
+        case 'onboarding':
+          setPath([
+            _createPage(const Onboarding(), OnboardingPageConfig),
+          ]);
+          break;
+        case 'userProfile':
+          setPath([
+            _createPage(const Dashboard(), DashboardPageConfig),
+            _createPage(const UserProfile(), UserProfilePageConfig),
+          ]);
+          break;
+        case 'editProfile':
+          setPath([
+            _createPage(const Dashboard(), DashboardPageConfig),
+            _createPage(const UserProfile(), UserProfilePageConfig),
+            _createPage(const EditProfile(), EditProfilePageConfig),
+          ]);
+          break;
+        case 'enableBiometrics':
+          setPath([
+            _createPage(const Login(), LoginPageConfig),
+            _createPage(const CreateAccount(), CreateAccountPageConfig),
+            _createPage(const AccountInfo(), AccountInfoPageConfig),
+            _createPage(const EnableBiometrics(), EnableBiometricsPageConfig),
           ]);
           break;
         case 'confirmSwap':

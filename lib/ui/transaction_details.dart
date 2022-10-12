@@ -124,12 +124,12 @@ class TransactionDetail extends StatelessWidget {
                                   TransactionType.swap) ...[
                                 Row(
                                   children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                    const Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                                       child: CircleAvatar(
-                                        backgroundColor: Colors.orange[800],
-                                        // foregroundImage: Icon,
+                                        backgroundColor: Colors.grey,
+                                        foregroundImage: AssetImage(
+                                            'images/default-user.png'),
                                       ),
                                     ),
                                     Column(
@@ -170,7 +170,7 @@ class TransactionDetail extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    _showSnackBar('Username', context),
+                                    _utility.showSnackBar('Username', context),
                                   },
                                   icon: const Icon(Icons.copy_rounded),
                                   iconSize: 18,
@@ -214,7 +214,8 @@ class TransactionDetail extends StatelessWidget {
                                           .toLowerCase(),
                                     ),
                                   ),
-                                  _showSnackBar('Transaction ID', context),
+                                  _utility.showSnackBar(
+                                      'Transaction ID', context),
                                 },
                                 icon: const Icon(Icons.copy_rounded),
                                 iconSize: 18,
@@ -231,10 +232,17 @@ class TransactionDetail extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () => _share(appState.transactionDetail!),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(300.0, 33.0),
-                    primary: Colors.orange[800],
-                    shape: const StadiumBorder(),
+                  style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(
+                      const Size(300.0, 33.0),
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                    ),
                   ),
                   child: Text(
                     'Share',
@@ -282,11 +290,11 @@ class TransactionDetail extends StatelessWidget {
   String _getUserFullName(Transaction transaction) {
     switch (transaction.transactionType) {
       case TransactionType.receive:
-        return '${transaction.sender?.firstName} ${transaction.sender?.lastName}';
+        return '${transaction.sender?.firstName ?? 'John'} ${transaction.sender?.lastName ?? 'Doe'}';
       case TransactionType.swap:
         return '';
       default:
-        return '${transaction.reciever?.firstName} ${transaction.reciever?.lastName}';
+        return '${transaction.reciever?.firstName ?? 'John'} ${transaction.reciever?.lastName ?? 'Doe'}';
     }
   }
 
@@ -358,22 +366,5 @@ class TransactionDetail extends StatelessWidget {
     }
 
     Share.share(shareString);
-  }
-
-  void _showSnackBar(String rel, BuildContext context) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.orange[800],
-        content: Text('$rel copied successfully'),
-        action: SnackBarAction(
-          label: 'DISMISS',
-          textColor: Colors.white,
-          onPressed: () => {
-            ScaffoldMessenger.of(context).clearSnackBars(),
-          },
-        ),
-      ),
-    );
   }
 }

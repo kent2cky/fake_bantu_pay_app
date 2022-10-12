@@ -41,7 +41,6 @@ class _FakeBantuPayState extends State<FakeBantuPay> {
       create: (_) => appState,
       child: MaterialApp.router(
         title: 'FakeBantuPayApp',
-        // home: root(context),
         theme: ThemeData(
           // change the focus border color of the TextField
           colorScheme:
@@ -50,10 +49,10 @@ class _FakeBantuPayState extends State<FakeBantuPay> {
           errorColor: Colors.red,
           primaryColor: Colors.orange[800],
         ),
-        // backButtonDispatcher: backButtonDispatcher,
         routerDelegate: delegate!,
         routeInformationParser: parser,
         backButtonDispatcher: backButtonDispatcher,
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

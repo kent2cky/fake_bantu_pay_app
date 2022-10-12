@@ -18,7 +18,6 @@ class Swap extends StatefulWidget {
 }
 
 class _SwapState extends State<Swap> {
-  @override
   final Utility _utility = Utility();
   final numberFormatter = NumberFormat("#,##0.0000", "en_US");
   final textController = TextEditingController();
@@ -34,27 +33,14 @@ class _SwapState extends State<Swap> {
   String? sourcesliderValue;
   String? _transferQnty;
   final _formKey = GlobalKey<FormState>();
+  AppState? _appState;
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      assets = [
-        Asset(
-          name: 'XBN',
-          logo: 'images/xbn-logo.png',
-          availableBalance: 1090.7750908,
-          nairaExchangeRate: 17.13164,
-          nairaValue: 0.0,
-        ),
-        Asset(
-          name: 'BNR',
-          logo: 'images/bnr-logo.png',
-          availableBalance: 15.9991808,
-          nairaExchangeRate: 2.1422,
-          nairaValue: 0.0,
-        )
-      ];
+      _appState = Provider.of<AppState>(context, listen: false);
+      assets = _appState!.listedAssets;
 
       sourceItems = [
         'XBN',
@@ -317,11 +303,7 @@ class _SwapState extends State<Swap> {
                                     ),
                                   ),
                                   Text(
-                                    assets!
-                                        .firstWhere((element) =>
-                                            element.name == sourceAsset!.name)
-                                        .availableBalance
-                                        .toString(),
+                                    _getAvailableAssetBalance(),
                                     style: _utility.getTextStyle(
                                       fontSize: 9.0,
                                       fontWeight: FontWeight.w400,
@@ -366,10 +348,17 @@ class _SwapState extends State<Swap> {
                   ],
                   ElevatedButton(
                     onPressed: () => _handleSubmit(appState),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(300.0, 33.0),
-                      primary: Colors.orange[800],
-                      shape: const StadiumBorder(),
+                    style: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all(
+                        const Size(300.0, 33.0),
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                      ),
                     ),
                     child: Text(
                       'Swap',
@@ -445,6 +434,15 @@ class _SwapState extends State<Swap> {
     );
   }
 
+  String _getAvailableAssetBalance() {
+    return _appState!.hideBalance
+        ? ''
+        : assets!
+            .firstWhere((element) => element.name == sourceAsset!.name)
+            .availableBalance
+            .toString();
+  }
+
   _onSliderChanged(dynamic newValue) {
     if (sourceAsset != null && sourceAsset!.name!.isNotEmpty) {
       setState(() {
@@ -493,58 +491,56 @@ class _SwapState extends State<Swap> {
       AlertDialog alert = AlertDialog(
           backgroundColor: Colors.transparent,
           insetPadding: const EdgeInsets.all(20),
-          content: Center(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(23),
-                ),
+          content: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(
+                Radius.circular(23),
               ),
-              height: 200,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Center(
-                      child: Text(
-                        'Oops!',
-                        style: _utility.getTextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 5.0),
+            ),
+            height: 200,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Center(
                     child: Text(
-                      'You must maintain a min balance of 6 ${sourceAsset!.name}',
+                      'Oops!',
                       style: _utility.getTextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.red,
-                      ),
-                      textAlign: TextAlign.center,
+                          fontSize: 18, fontWeight: FontWeight.w500),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ElevatedButton(
-                      onPressed: () =>
-                          Navigator.of(context).pop(), // dismiss dialog,
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(300.0, 33.0),
-                        primary: Colors.orange[800],
-                        shape: const StadiumBorder(),
-                      ),
-                      child: Text(
-                        'Continue',
-                        style: _utility.getTextStyle(color: Colors.white),
-                      ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 5.0),
+                  child: Text(
+                    'You must maintain a min balance of 6 ${sourceAsset!.name}',
+                    style: _utility.getTextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.red,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ElevatedButton(
+                    onPressed: () =>
+                        Navigator.of(context).pop(), // dismiss dialog,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(300.0, 33.0),
+                      primary: Colors.orange[800],
+                      shape: const StadiumBorder(),
+                    ),
+                    child: Text(
+                      'Continue',
+                      style: _utility.getTextStyle(color: Colors.white),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ));
 

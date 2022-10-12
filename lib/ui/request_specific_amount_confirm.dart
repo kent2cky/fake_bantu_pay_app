@@ -202,7 +202,7 @@ class _RequestSpecificAmountConfirmState
                       color: Colors.white,
                       child: QrImage(
                         data:
-                            "My name is Ken and I am requesting that you pay me ${transaction.asset.transferQnty} ${transaction.asset.name}.",
+                            "I am requesting that you pay me ${transaction.asset.transferQnty} ${transaction.asset.name}. https://bantupayapp.page.link/w2F2",
                         version: QrVersions.auto,
                         size: 300.0,
                       ),

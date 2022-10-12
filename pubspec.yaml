@@ -46,6 +46,11 @@ dependencies:
     timeago: ^3.2.2
     share: ^2.0.4
     path_provider: ^2.0.9
+    app_settings: ^4.1.6
+    country_code_picker: ^2.0.2
+    localstorage: ^4.0.0+1
+    firebase_core: ^1.17.1
+    firebase_messaging: ^11.4.1
 
 dev_dependencies:
     flutter_test:
@@ -72,11 +77,16 @@ flutter:
     assets:
         - images/loadscreen.jpg
         - images/icon-ok.svg
-        - images/ric.jpg
         - images/icon-below.png
         - images/bnr-logo.png
         - images/xbn-logo.png
         - images/default-user.png
+        - images/icon-facebook-circled.png
+        - images/icon-instagram.png
+        - images/icon-linkedin.png
+        - images/icon-twitter-circled.png
+        - images/icon-invisible.png
+        - images/icon-invisible-white.png
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -45,6 +45,16 @@ class FakeBantuPayRouteParser
         return ReceiveSpecificAmountPageConfig;
       case RequestSpecificAmountConfirmPath:
         return RequestSpecificAmountConfirmPageConfig;
+      case AccountInfoPath:
+        return AccountInfoPageConfig;
+      case OnboardingPath:
+        return OnboardingPageConfig;
+      case UserProfilePath:
+        return UserProfilePageConfig;
+      case EditProfilePath:
+        return EditProfilePageConfig;
+      case EnableBiometricsPath:
+        return EnableBiometricsPageConfig;
       default:
         return SplashPageConfig;
     }
@@ -83,6 +93,16 @@ class FakeBantuPayRouteParser
         return const RouteInformation(location: RecieveAssetPath);
       case Pages.ReceiveSpecificAmount:
         return const RouteInformation(location: ReceiveSpecificAmountPath);
+      case Pages.AccountInfo:
+        return const RouteInformation(location: AccountInfoPath);
+      case Pages.Onboarding:
+        return const RouteInformation(location: OnboardingPath);
+      case Pages.UserProfile:
+        return const RouteInformation(location: UserProfilePath);
+      case Pages.EditProfile:
+        return const RouteInformation(location: EditProfilePath);
+      case Pages.EnableBiometrics:
+        return const RouteInformation(location: EnableBiometricsPath);
       default:
         return const RouteInformation(location: SplashPath);
     }

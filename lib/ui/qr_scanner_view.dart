@@ -115,11 +115,9 @@ class _MyQRViewState extends State<MyQRView> {
               SizedBox(
                 width: 200,
                 height: 74,
-                child: Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.all(15.0),
-                    padding: const EdgeInsets.all(3.0),
-                  ),
+                child: Container(
+                  margin: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.all(3.0),
                 ),
               ),
             ],
@@ -170,7 +168,7 @@ class _MyQRViewState extends State<MyQRView> {
   void _toggleFlashlight() async {
     await controller?.toggleFlash();
     flashLightStatus = await controller?.getFlashStatus();
-
+    // run setState to update state after all the awaitables finish running
     setState(() {});
   }
 
@@ -198,12 +196,11 @@ class _MyQRViewState extends State<MyQRView> {
   }
 
   void _handleScanResult(String? scanResult) {
-    print('this is scanresult: $scanResult');
     appState?.currentAssetId = 1;
     appState?.transactionDetail = Transaction(
       transactionId: DateTime.now().toString(),
       timestamp: DateTime.now(),
-      asset: appState!.listedAssets
+      asset: appState!.listedAssets!
           .firstWhere((asset) => asset.id == appState!.currentAssetId),
       reciever: User(username: '', walletAddress: ''),
       transactionType: TransactionType.send,

@@ -22,39 +22,31 @@ class _ScanResultPageState extends State<ScanResultPage> {
   final _usernameTextController = TextEditingController();
   final _memoTextController = TextEditingController();
   final numberFormatter = NumberFormat("#,##0.0000", "en_US");
+  AppState? _appState;
   final _formKey = GlobalKey<FormState>();
   Transaction? _transaction;
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
-    print('initing state ooo');
+    _appState = Provider.of<AppState>(context, listen: false);
+    _transaction = Transaction(
+      transactionId: DateTime.now().toString(),
+      timestamp: DateTime.now(),
+      asset: _appState!.listedAssets!
+          .firstWhere((asset) => asset.id == _appState!.currentAssetId),
+      reciever: User(username: '', walletAddress: ''),
+      transactionType: TransactionType.send,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<AppState>(
       builder: ((context, appState, child) {
-        if (appState.transactionDetail == null) {
-          print('appstate.transactiondetails is null oooo');
-          _transaction = Transaction(
-            transactionId: DateTime.now().toString(),
-            timestamp: DateTime.now(),
-            asset: appState.listedAssets
-                .firstWhere((asset) => asset.id == appState.currentAssetId),
-            reciever: User(username: '', walletAddress: ''),
-            transactionType: TransactionType.send,
-          );
-        } else {
-          print('this is init state o');
-          _transaction = appState.transactionDetail;
-          _memoTextController.text = _transaction!.memo ?? '';
-        }
+        _transaction = appState.transactionDetail ?? _transaction;
+
+        _memoTextController.text = _transaction!.memo ?? '';
         return Scaffold(
           appBar: PreferredSize(
             preferredSize:
@@ -145,7 +137,7 @@ class _ScanResultPageState extends State<ScanResultPage> {
                                       onChanged: _handleUsernameChanged,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return 'Enter reviever\'s username or public key';
+                                          return 'Enter reciever\'s username or public key';
                                         }
 
                                         return null;
@@ -214,7 +206,7 @@ class _ScanResultPageState extends State<ScanResultPage> {
                                                     fontSize: 11.0),
                                               ),
                                               Text(
-                                                '${_transaction?.asset.availableBalance} ${_transaction?.asset.name}',
+                                                _getAvailableAssetBalance(),
                                                 style: _utility.getTextStyle(
                                                     fontSize: 11.0),
                                               )
@@ -265,64 +257,69 @@ class _ScanResultPageState extends State<ScanResultPage> {
                               AlertDialog alert = AlertDialog(
                                   backgroundColor: Colors.transparent,
                                   insetPadding: const EdgeInsets.all(20),
-                                  content: Center(
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(23),
-                                        ),
+                                  content: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(23),
                                       ),
-                                      height: 200,
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(20.0),
-                                            child: Center(
-                                              child: Text(
-                                                'Oops!',
-                                                style: _utility.getTextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10.0,
-                                                horizontal: 5.0),
+                                    ),
+                                    height: 200,
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(20.0),
+                                          child: Center(
                                             child: Text(
-                                              'You must maintain a min balance of 6 ${_transaction!.asset.name}',
+                                              'Oops!',
                                               style: _utility.getTextStyle(
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.red,
-                                              ),
-                                              textAlign: TextAlign.center,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500),
                                             ),
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: ElevatedButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context)
-                                                      .pop(), // dismiss dialog,
-                                              style: ElevatedButton.styleFrom(
-                                                minimumSize:
-                                                    const Size(300.0, 33.0),
-                                                primary: Colors.orange[800],
-                                                shape: const StadiumBorder(),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10.0, horizontal: 5.0),
+                                          child: Text(
+                                            'You must maintain a min balance of 6 ${_transaction!.asset.name}',
+                                            style: _utility.getTextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w300,
+                                              color: Colors.red,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: ElevatedButton(
+                                            onPressed: () =>
+                                                Navigator.of(context)
+                                                    .pop(), // dismiss dialog,
+                                            style: ButtonStyle(
+                                              fixedSize:
+                                                  MaterialStateProperty.all(
+                                                const Size(300.0, 33.0),
                                               ),
-                                              child: Text(
-                                                'Continue',
-                                                style: _utility.getTextStyle(
-                                                    color: Colors.white),
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                                const RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10),
+                                                  ),
+                                                ),
                                               ),
                                             ),
+                                            child: Text(
+                                              'Continue',
+                                              style: _utility.getTextStyle(
+                                                  color: Colors.white),
+                                            ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ));
 
@@ -340,10 +337,18 @@ class _ScanResultPageState extends State<ScanResultPage> {
                               );
                             }
                           },
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(300.0, 33.0),
-                            primary: Colors.orange[800],
-                            shape: const StadiumBorder(),
+                          style: ButtonStyle(
+                            fixedSize: MaterialStateProperty.all(
+                              const Size(300.0, 33.0),
+                            ),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                              ),
+                            ),
                           ),
                           child: Text(
                             'Continue',
@@ -363,6 +368,12 @@ class _ScanResultPageState extends State<ScanResultPage> {
         );
       }),
     );
+  }
+
+  String _getAvailableAssetBalance() {
+    return _appState!.hideBalance
+        ? ''
+        : '${_transaction?.asset.availableBalance} ${_transaction?.asset.name}';
   }
 
   _onTextChanged(String value) {
@@ -385,6 +396,7 @@ class _ScanResultPageState extends State<ScanResultPage> {
 
   _handleUsernameChanged(value) {
     _transaction!.reciever!.username = value;
+    _usernameTextController.text = value;
     _usernameTextController.selection = TextSelection.fromPosition(
         TextPosition(offset: _usernameTextController.text.length));
   }

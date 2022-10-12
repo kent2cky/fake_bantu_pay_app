@@ -28,18 +28,29 @@
  * THE SOFTWARE.
  */
 import 'package:flutter/material.dart';
+import '../utility.dart';
 import 'router_delegate.dart';
 
 class FakeBantuPayBackButtonDispatcher extends RootBackButtonDispatcher {
   final FakeBantuPayRouterDelegate _routerDelegate;
 
   FakeBantuPayBackButtonDispatcher(this._routerDelegate) : super();
+  final Utility _utility = Utility();
+  bool dialogOpen = false;
 
   @override
   Future<bool> didPopRoute() async {
-    print('backbuttondispatcher here!!!\n\n');
-    if (_routerDelegate.pages.length < 1) {
-      return await _confirmAppExit() ?? false;
+    if (_routerDelegate.pages.length <= 1) {
+      if (dialogOpen) {
+        Navigator.of(
+          _routerDelegate.navigatorKey.currentContext!,
+          rootNavigator: true,
+        ).pop(true);
+        dialogOpen = false;
+        return true;
+      }
+      dialogOpen = true;
+      return await _confirmAppExit() ?? true;
     } else {
       return _routerDelegate.popRoute();
     }
@@ -50,19 +61,49 @@ class FakeBantuPayBackButtonDispatcher extends RootBackButtonDispatcher {
         context: _routerDelegate.navigatorKey.currentContext!,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Exit App'),
-            content:
-                const Text('Are you sure you want to close this application?'),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
             actions: [
               TextButton(
-                child: const Text('Yes'),
-                onPressed: () => _routerDelegate.popRoute(),
+                child: Text(
+                  'Yes',
+                  style: _utility.getTextStyle(
+                      fontSize: 16.0, color: Colors.orange[800]),
+                ),
+                onPressed: () => Navigator.of(
+                  context,
+                  rootNavigator: true,
+                ).pop(false),
               ),
               TextButton(
-                child: const Text('No'),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
+                  child: Text(
+                    'No',
+                    style: _utility.getTextStyle(
+                        fontSize: 16.0, color: Colors.orange[800]),
+                  ),
+                  onPressed: () {
+                    Navigator.of(
+                      context,
+                      rootNavigator: true,
+                    ).pop(true);
+                    dialogOpen = false;
+                  }),
             ],
+            content: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(30),
+                ),
+              ),
+              child: Text(
+                'Are you sure you want to close this application?',
+                style: _utility.getTextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
           );
         });
   }

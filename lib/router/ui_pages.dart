@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 import '../app_state.dart';
 
 const String SplashPath = '/splash';
@@ -19,6 +17,11 @@ const String AssetDetailsPath = '/assetDetails';
 const String RecieveAssetPath = '/recieveAsset';
 const String ReceiveSpecificAmountPath = '/receiveSpecificAmount';
 const String RequestSpecificAmountConfirmPath = '/receiveSpecificAmountConfirm';
+const String AccountInfoPath = '/accountInfo';
+const String OnboardingPath = '/onboarding';
+const String UserProfilePath = '/userProfile';
+const String EditProfilePath = '/editProfile';
+const String EnableBiometricsPath = '/enableBiometrics';
 
 enum Pages {
   Splash,
@@ -38,6 +41,11 @@ enum Pages {
   RecieveAsset,
   ReceiveSpecificAmount,
   RequestSpecificAmountConfirm,
+  AccountInfo,
+  Onboarding,
+  UserProfile,
+  EditProfile,
+  EnableBiometrics,
 }
 
 class PageConfiguration {
@@ -137,4 +145,29 @@ PageConfiguration RequestSpecificAmountConfirmPageConfig = PageConfiguration(
     key: 'RequestSpecificAmountConfirm',
     path: RequestSpecificAmountConfirmPath,
     uiPage: Pages.RequestSpecificAmountConfirm,
+    currentPageAction: null);
+PageConfiguration AccountInfoPageConfig = PageConfiguration(
+    key: 'AccountInfo',
+    path: AccountInfoPath,
+    uiPage: Pages.AccountInfo,
+    currentPageAction: null);
+PageConfiguration OnboardingPageConfig = PageConfiguration(
+    key: 'Onboarding',
+    path: OnboardingPath,
+    uiPage: Pages.Onboarding,
+    currentPageAction: null);
+PageConfiguration UserProfilePageConfig = PageConfiguration(
+    key: 'UserProfile',
+    path: UserProfilePath,
+    uiPage: Pages.UserProfile,
+    currentPageAction: null);
+PageConfiguration EditProfilePageConfig = PageConfiguration(
+    key: 'EditProfile',
+    path: EditProfilePath,
+    uiPage: Pages.EditProfile,
+    currentPageAction: null);
+PageConfiguration EnableBiometricsPageConfig = PageConfiguration(
+    key: 'EnableBiometrics',
+    path: EnableBiometricsPath,
+    uiPage: Pages.EnableBiometrics,
     currentPageAction: null);

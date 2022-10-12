@@ -19,7 +19,6 @@ class ReceiveSpecificAmount extends StatefulWidget {
 class _ReceiveSpecificAmountState extends State<ReceiveSpecificAmount> {
   final Utility _utility = Utility();
   final _amountTextController = TextEditingController();
-  final _usernameTextController = TextEditingController();
   final _memoTextController = TextEditingController();
   final numberFormatter = NumberFormat("#,##0.0000", "en_US");
   final _formKey = GlobalKey<FormState>();
@@ -38,7 +37,7 @@ class _ReceiveSpecificAmountState extends State<ReceiveSpecificAmount> {
     _transaction = Transaction(
       transactionId: DateTime.now().toString(),
       timestamp: DateTime.now(),
-      asset: _appState!.listedAssets
+      asset: _appState!.listedAssets!
           .firstWhere((asset) => asset.id == _appState!.currentAssetId),
       reciever: User(username: '', walletAddress: ''),
       transactionType: TransactionType.send,
@@ -119,6 +118,7 @@ class _ReceiveSpecificAmountState extends State<ReceiveSpecificAmount> {
                                 Column(
                                   children: [
                                     TextFormField(
+                                      autofocus: true,
                                       style: _utility.getTextStyle(
                                         fontSize: 13.0,
                                         fontWeight: FontWeight.w400,
@@ -157,7 +157,6 @@ class _ReceiveSpecificAmountState extends State<ReceiveSpecificAmount> {
                                 TextFormField(
                                   controller: _memoTextController,
                                   onChanged: _handleForChanged,
-                                  autofocus: true,
                                   style: _utility.getTextStyle(
                                     fontSize: 13.0,
                                     fontWeight: FontWeight.w400,
@@ -238,12 +237,6 @@ class _ReceiveSpecificAmountState extends State<ReceiveSpecificAmount> {
     _memoTextController.text = value;
     _memoTextController.selection = TextSelection.fromPosition(
         TextPosition(offset: _memoTextController.text.length));
-  }
-
-  _handleUsernameChanged(value) {
-    _transaction!.reciever!.username = value;
-    _usernameTextController.selection = TextSelection.fromPosition(
-        TextPosition(offset: _usernameTextController.text.length));
   }
 
   _calculateExchangeRate(_) {

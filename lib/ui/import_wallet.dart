@@ -16,6 +16,7 @@ class ImportWallet extends StatefulWidget {
 class _ImportWalletState extends State<ImportWallet> {
   final Utility _utility = Utility();
   bool? _hasAgreed = false;
+  bool isObscured = true;
 
   Future<bool> _willPopScopeCall() async {
 // code to show toast or modal
@@ -91,16 +92,11 @@ class _ImportWalletState extends State<ImportWallet> {
                         labelStyle: _utility.getTextStyle(),
                         hintText: 'Enter password',
                         hintStyle: _utility.getTextStyle(fontSize: 11.0),
-                        suffixIcon: TextButton(
-                          onPressed: () => {},
-                          style: TextButton.styleFrom(
-                            fixedSize: const Size(20.0, 20.2),
-                          ),
-                          child: const Icon(
-                            Icons.remove_red_eye_outlined,
-                            color: Colors.black,
-                            size: 17.0,
-                          ),
+                        suffixIcon: IconButton(
+                          onPressed: () => setState(() {
+                            isObscured = !isObscured;
+                          }),
+                          icon: _utility.getIcon(isObscured),
                         ),
                       ),
                     ),
@@ -120,16 +116,11 @@ class _ImportWalletState extends State<ImportWallet> {
                         labelStyle: _utility.getTextStyle(),
                         hintText: 'Re-enter password',
                         hintStyle: _utility.getTextStyle(fontSize: 11.0),
-                        suffixIcon: TextButton(
-                          onPressed: () => {},
-                          style: TextButton.styleFrom(
-                            fixedSize: const Size(20.0, 20.2),
-                          ),
-                          child: const Icon(
-                            Icons.remove_red_eye_outlined,
-                            color: Colors.black,
-                            size: 17.0,
-                          ),
+                        suffixIcon: IconButton(
+                          onPressed: () => setState(() {
+                            isObscured = !isObscured;
+                          }),
+                          icon: _utility.getIcon(isObscured),
                         ),
                       ),
                     ),
@@ -141,7 +132,7 @@ class _ImportWalletState extends State<ImportWallet> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20.0, vertical: 0.0),
                     child: TextField(
-                      obscureText: true,
+                      obscureText: isObscured,
                       decoration: InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                         enabledBorder: _utility.getEnabledBorderColor(),
@@ -150,16 +141,11 @@ class _ImportWalletState extends State<ImportWallet> {
                         labelStyle: _utility.getTextStyle(),
                         hintText: 'Enter Secret key',
                         hintStyle: _utility.getTextStyle(fontSize: 11.0),
-                        suffixIcon: TextButton(
-                          onPressed: () => {},
-                          style: TextButton.styleFrom(
-                            fixedSize: const Size(20.0, 20.2),
-                          ),
-                          child: const Icon(
-                            Icons.remove_red_eye_outlined,
-                            color: Colors.black,
-                            size: 17.0,
-                          ),
+                        suffixIcon: IconButton(
+                          onPressed: () => setState(() {
+                            isObscured = !isObscured;
+                          }),
+                          icon: _utility.getIcon(isObscured),
                         ),
                       ),
                     ),
@@ -182,7 +168,7 @@ class _ImportWalletState extends State<ImportWallet> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: TextField(
-                      obscureText: true,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                         enabledBorder: _utility.getEnabledBorderColor(),
@@ -252,14 +238,18 @@ class _ImportWalletState extends State<ImportWallet> {
                     height: 20.0,
                   ),
                   ElevatedButton(
-                    onPressed: () async {
-                      print('I am summoned');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(300.0, 33.0),
-                      primary: Colors.orange[800],
-                      padding: const EdgeInsets.all(0),
-                      shape: const StadiumBorder(),
+                    onPressed: () async {},
+                    style: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all(
+                        const Size(300.0, 33.0),
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                      ),
                     ),
                     child: Text(
                       'Continue',

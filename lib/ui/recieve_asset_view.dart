@@ -37,7 +37,7 @@ class _RecieveAssetState extends State<RecieveAsset> {
     _transaction = Transaction(
       transactionId: DateTime.now().toString(),
       timestamp: DateTime.now(),
-      asset: _appState!.listedAssets
+      asset: _appState!.listedAssets!
           .firstWhere((asset) => asset.id == _appState!.currentAssetId),
       reciever: User(username: '', walletAddress: ''),
       transactionType: TransactionType.send,
@@ -138,7 +138,7 @@ class _RecieveAssetState extends State<RecieveAsset> {
                                   color: Colors.orange[800],
                                   onPressed: () => {
                                     Clipboard.setData(
-                                      ClipboardData(text: 'kent2cky'),
+                                      const ClipboardData(text: 'kent2cky'),
                                     ),
                                     _showSnackBar('Username', context),
                                   },
@@ -214,7 +214,8 @@ class _RecieveAssetState extends State<RecieveAsset> {
                                   onPressed: () => {
                                     Clipboard.setData(
                                       const ClipboardData(
-                                        text: "GAVLU3R6M3...HJRDORNFKR",
+                                        text:
+                                            "GAVLU3R6M3DSFS4SDS3ZCESDSDDSSDSDSC56JKKJ9KXZDSDHJRDORNFKR",
                                       ),
                                     ),
                                     _showSnackBar('public key', context),
@@ -269,8 +270,7 @@ class _RecieveAssetState extends State<RecieveAsset> {
                   Container(
                     color: Colors.white,
                     child: QrImage(
-                      data:
-                          "This is Ken and I am testing out the QR Code Generator package.",
+                      data: "https://bantupayapp.page.link/w2F2",
                       version: QrVersions.auto,
                       size: 300.0,
                     ),

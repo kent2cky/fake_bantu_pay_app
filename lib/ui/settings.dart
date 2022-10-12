@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../app_state.dart';
-import '../models/transaction.dart';
-import '../models/transaction_types.dart';
+import '../local_auth.dart';
 import '../router/ui_pages.dart';
 import '../utility.dart';
-import 'package:timeago/timeago.dart' as timeago;
+import 'package:local_auth/error_codes.dart' as auth_error;
 
 class Settings extends StatelessWidget {
   Settings({Key? key}) : super(key: key);
   final Utility _utility = Utility();
+  final Authenticator _authenticator = Authenticator();
   AppState? appState;
 
   @override
   Widget build(BuildContext context) {
-    appState = Provider.of<AppState>(context, listen: false);
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            color: Colors.grey.shade200,
-            child: Column(
+    return Consumer<AppState>(builder: (context, value, child) {
+      appState = value;
+      return SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Column(
               children: [
                 Container(
                   height: 60.0,
@@ -63,7 +63,7 @@ class Settings extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.fromLTRB(20.0, 0, 0, 0),
                               child: Text(
-                                'Profile',
+                                'Edit Profile',
                                 style: TextStyle(
                                   fontSize: 20.0,
                                   letterSpacing: 1.0,
@@ -96,43 +96,47 @@ class Settings extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.grey,
-                              foregroundImage:
-                                  AssetImage('images/default-user.png'),
+                    child: GestureDetector(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.grey,
+                                foregroundImage:
+                                    AssetImage('images/default-user.png'),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Ikenna Maduka',
-                                  style: _utility.getTextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w500,
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    appState!.currentAccount!.username!,
+                                    style: _utility.getTextStyle(
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                                IconButton(
-                                  onPressed: () => {},
-                                  icon: Icon(Icons.navigate_next),
-                                  color: Colors.orange.shade800,
-                                  iconSize: 30,
-                                ),
-                              ],
+                                  IconButton(
+                                    onPressed: _gotoUserProfile,
+                                    icon: const Icon(Icons.navigate_next),
+                                    color: Colors.orange.shade800,
+                                    iconSize: 30,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                      onTap: _gotoUserProfile,
                     ),
                   ),
                 ),
@@ -298,12 +302,52 @@ class Settings extends StatelessWidget {
                             thickness: 1,
                           ),
                         ),
-                        _settingsProperty(
-                          icon: const Icon(
-                            Icons.remove_red_eye_outlined,
-                            size: 15,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                                child: Icon(
+                                  Icons.remove_red_eye_outlined,
+                                  size: 15,
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Hide my Balance',
+                                      style: _utility.getTextStyle(
+                                        fontSize: 13.0,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Switch(
+                                          onChanged: (value) {
+                                            _toggleHideBalance(value, context);
+                                          },
+                                          value: appState!.hideBalance,
+                                          activeColor: Colors.white,
+                                          activeTrackColor: Colors.green[300],
+                                          inactiveThumbColor: Colors.white,
+                                          inactiveTrackColor:
+                                              Colors.orange[400],
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          property: 'Hide my Balance',
                         ),
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -327,12 +371,52 @@ class Settings extends StatelessWidget {
                             thickness: 1,
                           ),
                         ),
-                        _settingsProperty(
-                          icon: const Icon(
-                            Icons.fingerprint,
-                            size: 15,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                                child: Icon(
+                                  Icons.fingerprint,
+                                  size: 15,
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Biometrics',
+                                      style: _utility.getTextStyle(
+                                        fontSize: 13.0,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Switch(
+                                          onChanged: (value) {
+                                            _toggleSwitch(value, context);
+                                          },
+                                          value: appState!.biometricEnabled,
+                                          activeColor: Colors.white,
+                                          activeTrackColor: Colors.green[300],
+                                          inactiveThumbColor: Colors.white,
+                                          inactiveTrackColor:
+                                              Colors.orange[400],
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          property: 'Biometrics',
                         ),
                       ],
                     ),
@@ -548,27 +632,35 @@ class Settings extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.logout,
-                              size: 30,
-                              color: Colors.orange.shade800,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 0),
-                              child: Text(
-                                'Logout',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  letterSpacing: 1.0,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.orange.shade800,
-                                  fontFamily: "Source Sans Pro",
+                        child: IconButton(
+                          onPressed: () => {
+                            appState?.currentAction = PageAction(
+                                state: PageState.replaceAll,
+                                page: LoginPageConfig),
+                          },
+                          icon: Row(
+                            children: [
+                              Icon(
+                                Icons.logout,
+                                size: 30,
+                                color: Colors.orange.shade800,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                                child: Text(
+                                  'Logout',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    letterSpacing: 1.0,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.orange.shade800,
+                                    fontFamily: "Source Sans Pro",
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -576,10 +668,10 @@ class Settings extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   Widget _settingsProperty({
@@ -634,4 +726,52 @@ class Settings extends StatelessWidget {
       ),
     );
   }
+
+  void _toggleSwitch(bool value, BuildContext context) async {
+    try {
+      bool result = await _authenticator.authenticateMe();
+      if (result) {
+        appState!.biometricEnabled = value;
+      }
+    } on PlatformException catch (e) {
+      if (e.code == auth_error.notEnrolled ||
+          e.code == auth_error.notAvailable) {
+        _utility.errorAlert(context);
+      }
+    }
+  }
+
+  void _toggleHideBalance(bool value, BuildContext context) async {
+    if (appState!.hideBalance) {
+      _authenticate(context);
+    } else {
+      appState!.hideBalance = true;
+    }
+  }
+
+  void _authenticate(BuildContext context) async {
+    if (appState!.biometricEnabled) {
+      try {
+        bool result = await _authenticator.authenticateMe();
+        if (result) {
+          appState!.hideBalance = !appState!.hideBalance;
+        }
+      } on PlatformException catch (e) {
+        if (e.code == auth_error.notEnrolled) {
+          _utility.errorAlert(context);
+        }
+      }
+    } else {
+      _utility.authenticatePassword(
+          context,
+          appState!,
+          () => {
+                appState!.hideBalance = !appState!.hideBalance,
+                Navigator.of(context).pop(),
+              });
+    }
+  }
+
+  void _gotoUserProfile() => appState?.currentAction =
+      PageAction(state: PageState.addPage, page: UserProfilePageConfig);
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../app_state.dart';
 import '../local_auth.dart';
+import '../models/transaction.dart';
+import '../models/transaction_types.dart';
 import '../router/ui_pages.dart';
 import '../utility.dart';
 
@@ -69,21 +72,15 @@ class _TransactionSuccessPageState extends State<TransactionSuccessPage> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: '- 1',
+                                text:
+                                    '- ${appState.transactionDetail?.asset.transferQnty?.toStringAsFixed(7)}',
                                 style: _utility.getTextStyle(
                                     color: Colors.red,
                                     fontSize: 23.0,
                                     fontWeight: FontWeight.w400),
                               ),
                               TextSpan(
-                                text: '.0000000 ',
-                                style: _utility.getTextStyle(
-                                    color: Colors.red,
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              TextSpan(
-                                text: 'XBN',
+                                text: appState.transactionDetail?.asset.name,
                                 style: _utility.getTextStyle(
                                     fontWeight: FontWeight.w400,
                                     color: Colors.red,
@@ -135,13 +132,13 @@ class _TransactionSuccessPageState extends State<TransactionSuccessPage> {
                                   children: [
                                     Row(
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0, 0, 5, 0),
+                                        const Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(0, 0, 5, 0),
                                           child: CircleAvatar(
-                                            backgroundColor: Colors.orange[800],
-                                            foregroundImage:
-                                                NetworkImage(avatarImage),
+                                            backgroundColor: Colors.grey,
+                                            foregroundImage: AssetImage(
+                                                'images/default-user.png'),
                                           ),
                                         ),
                                         Column(
@@ -152,7 +149,9 @@ class _TransactionSuccessPageState extends State<TransactionSuccessPage> {
                                               text: TextSpan(
                                                 children: [
                                                   TextSpan(
-                                                    text: 'ric ',
+                                                    text: _getUserAddress(
+                                                        appState
+                                                            .transactionDetail!),
                                                     style:
                                                         _utility.getTextStyle(
                                                             fontSize: 18.0,
@@ -164,7 +163,8 @@ class _TransactionSuccessPageState extends State<TransactionSuccessPage> {
                                               ),
                                             ),
                                             Text(
-                                              'RIC RICHARDS',
+                                              _getUserFullName(
+                                                  appState.transactionDetail!),
                                               style: _utility.getTextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 12.0),
@@ -174,7 +174,17 @@ class _TransactionSuccessPageState extends State<TransactionSuccessPage> {
                                       ],
                                     ),
                                     IconButton(
-                                      onPressed: () => {},
+                                      onPressed: () => {
+                                        Clipboard.setData(
+                                          ClipboardData(
+                                            text: _getUserAddress(
+                                              appState.transactionDetail!,
+                                            ),
+                                          ),
+                                        ),
+                                        _utility.showSnackBar(
+                                            'Username', context),
+                                      },
                                       icon: const Icon(Icons.copy_rounded),
                                       iconSize: 18,
                                     ),
@@ -198,13 +208,24 @@ class _TransactionSuccessPageState extends State<TransactionSuccessPage> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      '3a38b3ea...49227191',
+                                      _getTransactionId(
+                                          appState.transactionDetail!),
                                       style: _utility.getTextStyle(
                                           fontSize: 15.0,
                                           fontWeight: FontWeight.w600),
                                     ),
                                     IconButton(
-                                      onPressed: () => {},
+                                      onPressed: () => {
+                                        Clipboard.setData(
+                                          ClipboardData(
+                                            text: appState.transactionDetail
+                                                ?.transactionId
+                                                .toLowerCase(),
+                                          ),
+                                        ),
+                                        _utility.showSnackBar(
+                                            'Transaction ID', context),
+                                      },
                                       icon: const Icon(Icons.copy_rounded),
                                       iconSize: 18,
                                     ),
@@ -217,14 +238,23 @@ class _TransactionSuccessPageState extends State<TransactionSuccessPage> {
                       ),
                       ElevatedButton(
                         onPressed: () async {
+                          appState.transactionDetail = null;
                           appState.currentAction = PageAction(
                               state: PageState.replaceAll,
                               page: DashboardPageConfig);
                         },
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(300.0, 33.0),
-                          primary: Colors.orange[800],
-                          shape: const StadiumBorder(),
+                        style: ButtonStyle(
+                          fixedSize: MaterialStateProperty.all(
+                            const Size(300.0, 33.0),
+                          ),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                          ),
                         ),
                         child: Text(
                           'Dashboard',
@@ -240,5 +270,46 @@ class _TransactionSuccessPageState extends State<TransactionSuccessPage> {
         ),
       ),
     );
+  }
+
+  String _getUserAddress(Transaction transaction) {
+    switch (transaction.transactionType) {
+      case TransactionType.receive:
+        return truncate(transaction.sender?.username ?? '',
+            length: 8, omission: '...');
+      case TransactionType.swap:
+        return '';
+      default:
+        return truncate(transaction.reciever?.username ?? '',
+            length: 8, omission: '...');
+    }
+  }
+
+  String _getUserFullName(Transaction transaction) {
+    switch (transaction.transactionType) {
+      case TransactionType.receive:
+        return '${transaction.sender?.firstName ?? 'John'} ${transaction.sender?.lastName ?? 'Doe'}';
+      case TransactionType.swap:
+        return '';
+      default:
+        return '${transaction.sender?.firstName ?? 'John'} ${transaction.sender?.lastName ?? 'Doe'}';
+    }
+  }
+
+  String _getTransactionId(Transaction transaction) {
+    print('transactionId: ${transaction.transactionId}');
+    if (transaction.transactionId.length <= 8) {
+      return transaction.transactionId.toLowerCase();
+    } else {
+      return '${truncate(transaction.transactionId, length: 8, omission: '...')}.${transaction.transactionId.substring(transaction.transactionId.length - 8, transaction.transactionId.length)}'
+          .toLowerCase();
+    }
+  }
+
+  String truncate(String text, {length: 7, omission: '...'}) {
+    if (length >= text.length) {
+      return text;
+    }
+    return text.replaceRange(length, text.length, omission);
   }
 }

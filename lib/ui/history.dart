@@ -19,41 +19,41 @@ class History extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            color: Colors.grey.shade200,
-            child: Column(
-              children: [
-                Container(
-                  height: 93.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Expanded(
-                        child: Text(
-                          'History',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            letterSpacing: 1.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                            fontFamily: "Source Sans Pro",
-                          ),
+          Column(
+            children: [
+              Container(
+                height: 93.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    Expanded(
+                      child: Text(
+                        'History',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          letterSpacing: 1.0,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                          fontFamily: "Source Sans Pro",
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                for (var transaction in appState!.transactions) ...[
-                  _myTile(
-                    transaction: transaction,
-                  ),
-                ]
+              ),
+              for (var transaction in appState!.transactions!.reversed) ...[
+                _myTile(
+                  transaction: transaction,
+                ),
               ],
-            ),
+              const SizedBox(
+                height: 40,
+              ),
+            ],
           ),
         ],
       ),

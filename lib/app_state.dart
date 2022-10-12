@@ -1,15 +1,15 @@
-import 'package:fake_bantu_pay/models/transaction.dart';
-import 'package:fake_bantu_pay/qr_scanner/expected_results.dart';
-import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
+import 'package:fake_bantu_pay/models/transaction.dart';
+import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 import 'models/asset.dart';
 import 'models/transaction_types.dart';
 import 'models/user.dart';
 import 'router/ui_pages.dart';
-import 'ui/swap.dart';
 
 const String LoggedInKey = 'LoggedIn';
+final _storage = LocalStorage('fake_bantu_pay_app.json');
 
 enum PageState { none, addPage, addAll, addWidget, pop, replace, replaceAll }
 
@@ -35,134 +35,56 @@ class AppState extends ChangeNotifier {
   bool get splashFinished => _splashFinished;
   final cartItems = [];
   String? emailAddress;
-  String? password;
+  String? newPassword;
+  int selectedIndex = 0;
+  GlobalKey? globalKey;
 
-  List<Asset> listedAssets = [
-    Asset(
-      id: 1,
-      name: 'XBN',
-      fullName: 'Bantu Network Token',
-      description:
-          'Bantu Network Token is the native asset and network utility token issued by the Bantu Blockchain Foundation',
-      issuer: 'www.bantufoundation.org',
-      logo: 'images/xbn-logo.png',
-      availableBalance: 134.4748608,
-      nairaExchangeRate: 17.13164,
-    ),
-    Asset(
-      id: 2,
-      name: 'BNR',
-      fullName: 'BNR',
-      description: 'Bantu Network Token',
-      issuer: 'www.bantufoundation.org',
-      logo: 'images/bnr-logo.png',
-      availableBalance: 30.8382881,
-      nairaExchangeRate: 2.1422,
-    ),
-  ];
+  bool _biometricEnabled = false;
+  bool get biometricEnabled => _biometricEnabled;
+  set biometricEnabled(bool isEnabled) {
+    _biometricEnabled = isEnabled;
+    notifyListeners();
+    _persistBiometricState(isEnabled);
+  }
 
-  final List<Transaction> transactions = [
-    Transaction(
-      transactionId: 'PPOIML23SDD34332SSX4SZ323244PPOIML23SDD34332SSX4SZ323244',
-      timestamp: DateTime.now().subtract(const Duration(minutes: 30)),
-      asset: Asset(name: 'XBN', transferQnty: 806.000),
-      transactionType: TransactionType.send,
-      reciever: User(
-          walletAddress: 'SDME23SDD34332SSX4SZ323244',
-          username: 'slawomir',
-          firstName: 'Sly',
-          lastName: 'Davids'),
-    ),
-    Transaction(
-      transactionId: 'SALFJSDF334934AKDADS494304SKFDLKFDSKLDKSDKSLDK39302LS9SD',
-      timestamp: DateTime(2022, 03, 15, 15, 44),
-      asset: Asset(
-        name: 'XBN',
-        transferQnty: 398.000,
-        nairaExchangeRate: 17.13164,
-      ),
-      transactionType: TransactionType.swap,
-      destinationAsset: Asset(
-        name: 'BNR',
-        nairaExchangeRate: 2.1422,
-      ),
-    ),
-    Transaction(
-      transactionId:
-          'VBNIR4304DFD094DFLKFDLKDLFKDLFFDLDFDL9534DFKLLFLDFKDFDLDLKF',
-      timestamp: DateTime(2022, 03, 14, 18, 59),
-      asset: Asset(name: 'XBN', transferQnty: 700.000),
-      transactionType: TransactionType.receive,
-      sender: User(
-          walletAddress: 'LKJZXE23SDD34332SSX4SZ323244',
-          username: 'rikkan',
-          firstName: 'Emeka',
-          lastName: 'Okeke'),
-    ),
-    Transaction(
-      transactionId:
-          'SGFHFJSDF334934AKDADS494304SKFDLKFDSKLDKSDKSLDK39302LS23DSD',
-      timestamp: DateTime(2022, 03, 13, 09, 12),
-      asset: Asset(name: 'XBN', transferQnty: 300.000),
-      transactionType: TransactionType.send,
-      reciever: User(
-          walletAddress: 'LKJZXE23SDD34332SSX4SZ323244',
-          username: 'kent2cky',
-          firstName: 'Ken',
-          lastName: 'Maduka'),
-    ),
-    Transaction(
-      transactionId:
-          'CNVFDJFFK34934AKDADS494304SKFDLKFDSKLDKSDKSLDK393029VCF0VC',
-      timestamp: DateTime(2022, 03, 11, 12, 45),
-      asset: Asset(name: 'XBN', transferQnty: 1039.000),
-      transactionType: TransactionType.receive,
-      sender: User(
-          walletAddress: 'CNVFDJFFK34934AKDADS494304SK',
-          username: 'ric',
-          firstName: 'Ric',
-          lastName: 'Richard'),
-    ),
-    Transaction(
-        transactionId:
-            'DSDASFDFSD434AKDADS494304SKFDLKFDSKLDKSDKSLDK3930DFLFDKD45',
-        timestamp: DateTime(2022, 03, 11, 12, 45),
-        asset: Asset(
-          name: 'BNR',
-          transferQnty: 398.000,
-          nairaExchangeRate: 2.1422,
-        ),
-        transactionType: TransactionType.swap,
-        destinationAsset: Asset(
-          name: 'XBN',
-          nairaExchangeRate: 17.13164,
-        )),
-    Transaction(
-      transactionId: 'PPOIML23SDD34332SSX4SZ323244FDLKFDSKLDKSDKSLDK39302LS9SD',
-      timestamp: DateTime(2022, 03, 11, 10, 32),
-      asset: Asset(name: 'XBN', transferQnty: 430.000),
-      transactionType: TransactionType.send,
-      reciever: User(
-          walletAddress: 'PPOIML23SDD34332SSX4SZ323244',
-          username: 'godswill',
-          firstName: 'Godswill',
-          lastName: 'Richard'),
-    ),
-    Transaction(
-        transactionId:
-            'AFDASD340D032038ZDCS8D8ZE9ZZ5Z7CZDFREKLLHKTY42KLKFL534DDF',
-        timestamp: DateTime(2022, 03, 11, 12, 45),
-        asset: Asset(
-          name: 'XBN',
-          transferQnty: 1.00,
-          nairaExchangeRate: 17.13164,
-        ),
-        transactionType: TransactionType.swap,
-        destinationAsset: Asset(
-          name: 'BNR',
-          nairaExchangeRate: 2.1422,
-        )),
-  ];
+  void _persistBiometricState(bool isEnabled) async =>
+      await _storage.ready.then((value) => {
+            if (true) _storage.setItem('biometricsEnabled', isEnabled),
+          });
+
+  bool _hideBalance = false;
+  bool get hideBalance => _hideBalance;
+  set hideBalance(bool isHidden) {
+    _hideBalance = isHidden;
+    notifyListeners();
+    _persistBalanceState(isHidden);
+  }
+
+  void _persistBalanceState(bool isHidden) async =>
+      await _storage.ready.then((value) => {
+            if (true) _storage.setItem('balanceHidden', isHidden),
+          });
+
+  List<Asset>? _listedAssets;
+  List<Asset>? get listedAssets => _listedAssets;
+  set listedAssets(List<Asset>? assets) {
+    _listedAssets = assets;
+    notifyListeners();
+  }
+
+  User? _currentAccount;
+  User? get currentAccount => _currentAccount;
+  set currentAccount(User? account) {
+    _currentAccount = account;
+    notifyListeners();
+  }
+
+  List<Transaction>? _transactions;
+  List<Transaction>? get transactions => _transactions;
+  set transactions(List<Transaction>? transactions) {
+    _transactions = transactions;
+    notifyListeners();
+  }
 
   int? currentAssetId;
   Asset? swapSource;
@@ -180,6 +102,62 @@ class AppState extends ChangeNotifier {
   set currentAction(PageAction action) {
     _currentAction = action;
     notifyListeners();
+  }
+
+  void processTransaction(Transaction transaction) {
+    switch (transaction.transactionType) {
+      case TransactionType.send:
+        updateSend(transaction);
+        break;
+      case TransactionType.swap:
+        updateSwap(transaction);
+        break;
+      default:
+    }
+  }
+
+  void persistTransactions() async {
+    var transString = transactions
+        ?.map((transaction) => transaction.toJSONEncodable())
+        .toList();
+
+    await _storage.setItem('transactions', transString!);
+
+    var listedAssetString =
+        _listedAssets?.map((asset) => asset.toJSONEncodable()).toList();
+    await _storage.setItem('listed_assets', listedAssetString);
+  }
+
+  void updateSend(Transaction transaction) {
+    var asset = listedAssets!
+        .firstWhere((asset) => asset.name == transaction.asset.name);
+    var newValue = asset.availableBalance! - transaction.asset.transferQnty!;
+    listedAssets!
+        .firstWhere((asset) => asset.name == transaction.asset.name)
+        .availableBalance = newValue;
+  }
+
+  void updateSwap(Transaction transaction) {
+    // get the listed asset details
+    var sourceAsset = listedAssets!
+        .firstWhere((asset) => asset.name == transaction.asset.name);
+    var destAsset = listedAssets!.firstWhere(
+        (asset) => asset.name == transaction.destinationAsset!.name);
+
+// substract from the swap source
+    var newSourceValue =
+        sourceAsset.availableBalance! - transaction.asset.transferQnty!;
+    // increment the swap destination
+    var newDestValue = destAsset.availableBalance! +
+        transaction.destinationAsset!.transferQnty!;
+
+    // persist the new values
+    listedAssets!
+        .firstWhere((asset) => asset.name == transaction.asset.name)
+        .availableBalance = newSourceValue;
+    listedAssets!
+        .firstWhere((asset) => asset.name == transaction.destinationAsset!.name)
+        .availableBalance = newDestValue;
   }
 
   AppState() {
@@ -207,9 +185,13 @@ class AppState extends ChangeNotifier {
 
   void setSplashFinished() {
     _splashFinished = true;
-    _currentAction =
-        PageAction(state: PageState.replaceAll, page: LoginPageConfig);
-    notifyListeners();
+    if (_currentAccount == null) {
+      _currentAction =
+          PageAction(state: PageState.replaceAll, page: OnboardingPageConfig);
+    } else {
+      _currentAction =
+          PageAction(state: PageState.replaceAll, page: LoginPageConfig);
+    }
   }
 
   void login() {
